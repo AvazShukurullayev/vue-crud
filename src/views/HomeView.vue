@@ -8,14 +8,14 @@
       >
         <input
           type="text"
-          class="input"
+          class="input p-2"
           v-model="form.name"
           placeholder="Enter your name..."
           required
         />
         <input
           type="text"
-          class="input"
+          class="input p-2"
           v-model="form.label"
           placeholder="Enter your label..."
           required
@@ -28,6 +28,7 @@
 
       <ul class="list">
         <li
+          id="my-table"
           class="item d-flex align-items-center justify-content-between shadow p-2 my-3"
           v-for="item in getRoles"
         >
@@ -45,6 +46,15 @@
           </div>
         </li>
       </ul>
+
+     
+      <p class="mt-3">Current Page: {{ currentPage }}</p>
+      <br />
+      <br />
+      <h2>Danniylar qanaqa korinishda bo'ladi</h2>
+      <pre>
+        {{ getRoles }}
+      </pre>
     </div>
   </div>
 </template>
@@ -57,13 +67,12 @@ export default {
   components: {},
   data() {
     return {
-      form: {
-        name: "",
-        label: "",
-      },
+      form: {},
       submitButtons: {
         isShown: true,
       },
+      perPage: 10,
+      currentPage: 1,
     };
   },
   computed: {
@@ -81,8 +90,7 @@ export default {
         console.log("bu if yani isShown = false");
         await this.actionUpdateElement(this.form);
         console.log("Home view submit form => ", this.form);
-        this.form.name = "";
-        this.form.label = "";
+        this.form = {};
         this.submitButtons.isShown = !this.submitButtons.isShown;
       } else {
         console.log("bu else yani isShwown = true");
@@ -90,8 +98,7 @@ export default {
         if (this.getMessage.success) {
           await this.actionRoles();
           alert(this.getMessage.message);
-          this.form.name = "";
-          this.form.label = "";
+          this.form = {};
         } else {
           alert("Tizimda xatolik bor");
         }
@@ -100,7 +107,7 @@ export default {
     async updateElement(id) {
       console.log("update element id => ", id);
       let selectedItem;
-      this.getRoles.find((element, index) => {
+      this.getRoles.find((element) => {
         if (element.id == id) {
           selectedItem = element;
         }
